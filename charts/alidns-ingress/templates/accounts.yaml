@@ -1,0 +1,15 @@
+{{- if .Values.accounts }}
+apiVersion: v1
+kind: List
+items:
+{{- range .Values.accounts }}
+- apiVersion: xzzpig.com/v1
+  kind: AliDnsAccount
+  metadata:
+    name: {{ .name }}
+  spec:
+    accessKeyId: {{ .accessKeyId | quote }}
+    accessKeySecret: {{ .accessKeySecret | quote }}
+    domainName: {{ .domainName | quote }}
+{{- end}}
+{{- end -}}

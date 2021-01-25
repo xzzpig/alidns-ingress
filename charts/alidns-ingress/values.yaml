@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  repository: xzzpig/alidnsingress
+  pullPolicy: IfNotPresent
+  tag: "1.1.1"
+
+imagePullSecrets: []
+
+accounts: []
+  # - name: a-alidns-account
+  #   accessKeyId: a
+  #   accessKeySecret: b
+  #   domainName: a.com
+  # - name: b-alidns-account
+  #   accessKeyId: c
+  #   accessKeySecret: d
+  #   domainName: b.com
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
