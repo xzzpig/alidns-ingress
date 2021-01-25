@@ -1,0 +1,77 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: alidnsaccount.xzzpig.com
+spec:
+  group: xzzpig.com
+  names:
+    plural: alidnsaccount
+    singular: alidnsaccount
+    shortNames:
+      - adc
+    kind: AliDnsAccount
+  scope: Cluster
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                accessKeyId:
+                  type: string
+                accessKeySecret:
+                  type: string
+                domainName:
+                  type: string
+      subresources:
+        status: {}
+  conversion:
+    strategy: None
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: alidns-ingress
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: alidns-ingress
+    app.kubernetes.io/version: 1.1.1
+  name: alidns-ingress
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: alidns-ingress
+      app.kubernetes.io/name: alidns-ingress
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: alidns-ingress
+        app.kubernetes.io/name: alidns-ingress
+    spec:
+      containers:
+      - image: xzzpig/alidnsingress:1.1.1
+        imagePullPolicy: IfNotPresent
+        name: alidns-ingress
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
